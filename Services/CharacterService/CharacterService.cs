@@ -20,6 +20,23 @@ namespace dotnet_rpg.Services.CharacterService
             _mapper = mapper;
 
         }
+
+          public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters(int userId)
+        {
+            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
+            var dbCharacters = await _context.Characters.Where(c => c.User.Id == userId).ToListAsync();
+            serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
+            return serviceResponse;
+        }
+
+          public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
+        {
+            var serviceResponse = new ServiceResponse<GetCharacterDto>();
+            var dbCharacters = await _context.Characters.FirstAsync(c => c.Id == id);
+            serviceResponse.Data = _mapper.Map<GetCharacterDto>(dbCharacters);
+            return serviceResponse;
+        }
+
         public async Task<ServiceResponse<List<GetCharacterDto>>> AddCharacter(AddCharacterDto newCharacter)
         {
             var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
@@ -30,44 +47,7 @@ namespace dotnet_rpg.Services.CharacterService
             return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
-        {
-            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            try
-            {
-                Character character = await _context.Characters.FirstAsync(c => c.Id == id);
-                _context.Characters.Remove(character);
-                await _context.SaveChangesAsync();
-                serviceResponse.Data = await _context.Characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToListAsync();
-
-            }
-            catch (Exception ex)
-            {
-                serviceResponse.Sucess = false;
-                serviceResponse.Message = ex.Message;
-
-            }
-
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
-        {
-            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
-            var dbCharacters = await _context.Characters.ToListAsync();
-            serviceResponse.Data = dbCharacters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToList();
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<GetCharacterDto>> GetCharacterById(int id)
-        {
-            var serviceResponse = new ServiceResponse<GetCharacterDto>();
-            var dbCharacters = await _context.Characters.FirstAsync(c => c.Id == id);
-            serviceResponse.Data = _mapper.Map<GetCharacterDto>(dbCharacters);
-            return serviceResponse;
-        }
-
-        public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updatedCharacter)
+         public async Task<ServiceResponse<GetCharacterDto>> UpdateCharacter(UpdateCharacterDto updatedCharacter)
         {
             var serviceResponse = new ServiceResponse<GetCharacterDto>();
             try
@@ -95,5 +75,28 @@ namespace dotnet_rpg.Services.CharacterService
 
             return serviceResponse;
         }
+
+        public async Task<ServiceResponse<List<GetCharacterDto>>> DeleteCharacter(int id)
+        {
+            var serviceResponse = new ServiceResponse<List<GetCharacterDto>>();
+            try
+            {
+                Character character = await _context.Characters.FirstAsync(c => c.Id == id);
+                _context.Characters.Remove(character);
+                await _context.SaveChangesAsync();
+                serviceResponse.Data = await _context.Characters.Select(c => _mapper.Map<GetCharacterDto>(c)).ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Sucess = false;
+                serviceResponse.Message = ex.Message;
+
+            }
+
+            return serviceResponse;
+        }
+      
+       
     }
 }
