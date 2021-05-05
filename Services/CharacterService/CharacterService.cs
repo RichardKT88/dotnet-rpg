@@ -24,7 +24,7 @@ namespace dotnet_rpg.Services.CharacterService
             _mapper = mapper;
 
         }
-
+        //Statement to get the currently authenticated user
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
         public async Task<ServiceResponse<List<GetCharacterDto>>> GetAllCharacters()
