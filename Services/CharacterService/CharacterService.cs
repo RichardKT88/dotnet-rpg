@@ -77,7 +77,7 @@ namespace dotnet_rpg.Services.CharacterService
                     character.HitPoints = updatedCharacter.HitPoints;
                     character.Strength = updatedCharacter.Strength;
                     character.Defense = updatedCharacter.Defense;
-                    character.Inteligence = updatedCharacter.Inteligence;
+                    character.Intelligence = updatedCharacter.Intelligence;
                     character.Class = updatedCharacter.Class;
 
                     serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
