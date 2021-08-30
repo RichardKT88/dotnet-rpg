@@ -7,6 +7,7 @@ namespace dotnet_rpg.Models
     {
         Knight,
         Mage,
-        Cleric
+        Cleric,
+        Fighter
     }
 }

@@ -29,7 +29,7 @@ namespace dotnet_rpg
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(options => 
-                options.UseSqlite(Configuration.GetConnectionString("SqliteConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
