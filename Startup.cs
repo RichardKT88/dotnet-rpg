@@ -1,5 +1,6 @@
 using dotnet_rpg.Data;
 using dotnet_rpg.Services.CharacterService;
+using dotnet_rpg.Services.CharacterSkillService;
 using dotnet_rpg.Services.FightService;
 using dotnet_rpg.Services.WeaponService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -60,6 +61,7 @@ namespace dotnet_rpg
                 });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IWeaponService, WeaponService>();
+            services.AddScoped<ICharacterSkillService, CharacterSkillService>();
             services.AddScoped<IFightService, FightService>();
 
 

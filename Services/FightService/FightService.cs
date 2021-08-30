@@ -77,13 +77,13 @@ namespace dotnet_rpg.Services.FightService
             try
             {
                 var attacker = await _context.Characters
-                    .Include(c => c.Skills)
+                    .Include(c => c.CharacterSkills).ThenInclude(cs => cs.Skill)
                     .FirstOrDefaultAsync(c => c.Id == request.AttackerId);
 
                 var opponent = await _context.Characters
                     .FirstOrDefaultAsync(c => c.Id == request.OpponentId);
 
-                var skill = attacker.Skills.FirstOrDefault(s => s.Id == request.SkillId);
+                var skill = attacker.CharacterSkills.FirstOrDefault(cs => cs.Skill.Id == request.SkillId);
 
                 if (skill == null)
                 {
@@ -118,9 +118,9 @@ namespace dotnet_rpg.Services.FightService
             return response;
         }
 
-        private static int DoSkillAttack(Character attacker, Character opponent, Skill skill)
+        private static int DoSkillAttack(Character attacker, Character opponent, CharacterSkill characterSkill)
         {
-            int damage = skill.Damage + (new Random().Next(attacker.Intelligence));
+            int damage = characterSkill.Skill.Damage + (new Random().Next(attacker.Intelligence));
             damage -= new Random().Next(opponent.Defense);
 
             if (damage > 0)
@@ -141,7 +141,7 @@ namespace dotnet_rpg.Services.FightService
             {
                 var characters = await _context.Characters
                     .Include(c => c.Weapon)
-                    .Include(c => c.Skills)
+                    .Include(c => c.CharacterSkills).ThenInclude(cs => cs.Skill)
                     .Where(c => request.CharacterIds.Contains(c.Id)).ToListAsync();
                 
                 bool defeated = false;
@@ -163,8 +163,8 @@ namespace dotnet_rpg.Services.FightService
                         }
                         else 
                         {
-                            var skill = attacker.Skills[new Random().Next(attacker.Skills.Count)];
-                            attackUsed = skill.Name;
+                            var skill = attacker.CharacterSkills[new Random().Next(attacker.CharacterSkills.Count)];
+                            attackUsed = skill.Skill.Name;
                             damage = DoSkillAttack(attacker, opponent, skill);
                         }
 
